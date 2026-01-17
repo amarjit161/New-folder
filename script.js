@@ -1,17 +1,15 @@
+// ===============================
 // Mobile Navigation Toggle
+// ===============================
 const burger = document.querySelector('.burger');
 const navLinks = document.querySelector('.nav-links');
 const navLinksItems = document.querySelectorAll('.nav-links li');
 
 burger.addEventListener('click', () => {
-    // Toggle Nav
     navLinks.classList.toggle('active');
-    
-    // Animate Burger
     burger.classList.toggle('active');
 });
 
-// Close mobile menu when clicking on a link
 navLinksItems.forEach(item => {
     item.addEventListener('click', () => {
         navLinks.classList.remove('active');
@@ -19,7 +17,9 @@ navLinksItems.forEach(item => {
     });
 });
 
+// ===============================
 // Smooth Scroll
+// ===============================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -33,28 +33,30 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar scroll effect
+// ===============================
+// Navbar Scroll Effect
+// ===============================
 let lastScroll = 0;
 const navbar = document.querySelector('.navbar');
 
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
-    
+
     if (currentScroll <= 0) {
         navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
     } else if (currentScroll > lastScroll) {
-        // Scrolling down
         navbar.style.transform = 'translateY(-100%)';
     } else {
-        // Scrolling up
         navbar.style.transform = 'translateY(0)';
         navbar.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
     }
-    
+
     lastScroll = currentScroll;
 });
 
-// Intersection Observer for animations
+// ===============================
+// Section Animation (IntersectionObserver)
+// ===============================
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -100px 0px'
@@ -69,7 +71,6 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all sections
 document.querySelectorAll('section').forEach(section => {
     section.style.opacity = '0';
     section.style.transform = 'translateY(30px)';
@@ -77,67 +78,72 @@ document.querySelectorAll('section').forEach(section => {
     observer.observe(section);
 });
 
-// Contact Form Handler
-const contactForm = document.querySelector('.contact-form');
+// ===============================
+// CONTACT FORM (FORMSPREE – FIXED)
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+    const contactForm = document.getElementById("contact-form");
+    const status = document.getElementById("form-status");
 
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(contactForm);
-    
-    // You can add your form submission logic here
-    // For now, we'll just show an alert
-    alert('Thank you for your message! I will get back to you soon.');
-    
-    // Reset form
-    contactForm.reset();
+    if (!contactForm) return;
+
+    contactForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        status.textContent = "Sending message...";
+        status.style.color = "#4fa3ff";
+
+        const formData = new FormData(contactForm);
+
+        try {
+            const response = await fetch(contactForm.action, {
+                method: "POST",
+                body: formData,
+                headers: { "Accept": "application/json" }
+            });
+
+            if (response.ok) {
+                status.textContent = "✅ Message sent successfully!";
+                status.style.color = "green";
+                contactForm.reset();
+            } else {
+                status.textContent = "❌ Failed to send message.";
+                status.style.color = "red";
+            }
+        } catch (error) {
+            status.textContent = "❌ Network error. Try again later.";
+            status.style.color = "red";
+        }
+    });
 });
 
-// Add active class to current nav item
+// ===============================
+// Active Nav Highlight on Scroll
+// ===============================
 const sections = document.querySelectorAll('section');
 const navItems = document.querySelectorAll('.nav-links a');
 
 window.addEventListener('scroll', () => {
     let current = '';
-    
+
     sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        
-        if (pageYOffset >= sectionTop - 200) {
+        const sectionTop = section.offsetTop - 200;
+        if (scrollY >= sectionTop) {
             current = section.getAttribute('id');
         }
     });
-    
+
     navItems.forEach(item => {
         item.classList.remove('active');
-        if (item.getAttribute('href').slice(1) === current) {
+        if (item.getAttribute('href') === `#${current}`) {
             item.classList.add('active');
         }
     });
 });
 
-// Typing effect for hero title (optional enhancement)
-const heroTitle = document.querySelector('.hero-title');
-if (heroTitle) {
-    const text = heroTitle.textContent;
-    heroTitle.textContent = '';
-    let i = 0;
-    
-    function typeWriter() {
-        if (i < text.length) {
-            heroTitle.textContent += text.charAt(i);
-            i++;
-            setTimeout(typeWriter, 100);
-        }
-    }
-    
-    // Uncomment to enable typing effect
-    // setTimeout(typeWriter, 500);
-}
-
-// Scroll to top button (optional)
+// ===============================
+// Scroll To Top Button
+// ===============================
 const scrollTopBtn = document.createElement('button');
 scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
 scrollTopBtn.className = 'scroll-top';
@@ -164,18 +170,11 @@ scrollTopBtn.style.cssText = `
 document.body.appendChild(scrollTopBtn);
 
 window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        scrollTopBtn.style.display = 'flex';
-    } else {
-        scrollTopBtn.style.display = 'none';
-    }
+    scrollTopBtn.style.display = window.pageYOffset > 300 ? 'flex' : 'none';
 });
 
 scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 scrollTopBtn.addEventListener('mouseenter', () => {
