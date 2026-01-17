@@ -323,10 +323,23 @@
                         </div>
                     </div>
                 </div>
-                <form id="contact-form"
-      class="contact-form"
-      action="https://formspree.io/f/mwvvveka"
-      method="POST">
+                <form
+  id="contact-form"
+  class="contact-form"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+>
+  <!-- REQUIRED: Web3Forms Access Key -->
+  <input type="hidden" name="access_key" value="6e8d5dac-4ef6-49ae-a3c9-a1d19b2969dc">
+
+  <!-- Optional metadata -->
+    <input type="hidden" name="subject" value="New Portfolio Contact Message">
+    <input type="hidden" name="from_name" value="IT Engineer Portfolio">
+    <input type="hidden" name="site" value="Vercel + GitHub Pages">
+    <!-- Optional: set Reply-To to user's email and add honeypot/redirect -->
+    <input type="hidden" name="reply_to" value="{{email}}">
+    <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
+    <input type="hidden" name="redirect" value="https://web3forms.com/success">
 
   <div class="form-group">
     <input type="text" name="name" placeholder="Your Name" required>
@@ -337,7 +350,7 @@
   </div>
 
   <div class="form-group">
-    <input type="text" name="subject" placeholder="Subject" required>
+    <input type="text" name="subject" placeholder="Subject">
   </div>
 
   <div class="form-group">
@@ -349,20 +362,14 @@
   <p id="form-status"></p>
 </form>
             </div>
-        </div>  
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 IT Engineer Portfolio. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="https://github.com/amarjit161" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/amarjit-s-5b9664128/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="https://x.com/Amarjit505" target="_blank"><i class="fab fa-twitter"></i></a>
-            </div>
+            <p>&copy; 2024 Amarjit Shrama. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="script.js"></script>
-</body>
-</html>

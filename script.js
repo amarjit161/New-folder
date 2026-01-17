@@ -85,10 +85,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const contactForm = document.getElementById("contact-form");
     const status = document.getElementById("form-status");
 
-    if (!contactForm) return;
+    if (!contactForm || !status) return;
 
     contactForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending...";
+        }
 
         status.textContent = "Sending message...";
         status.style.color = "#4fa3ff";
@@ -102,17 +108,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Accept": "application/json" }
             });
 
+            const data = await response.json().catch(() => ({}));
+
             if (response.ok) {
                 status.textContent = "✅ Message sent successfully!";
                 status.style.color = "green";
                 contactForm.reset();
             } else {
-                status.textContent = "❌ Failed to send message.";
+                status.textContent = (data && data.message) ? data.message : "❌ Failed to send message.";
                 status.style.color = "red";
             }
         } catch (error) {
             status.textContent = "❌ Network error. Try again later.";
             status.style.color = "red";
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Send Message";
+            }
         }
     });
 });
