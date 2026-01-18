@@ -5,17 +5,19 @@ const burger = document.querySelector('.burger');
 const navLinks = document.querySelector('.nav-links');
 const navLinksItems = document.querySelectorAll('.nav-links li');
 
-burger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    burger.classList.toggle('active');
-});
-
-navLinksItems.forEach(item => {
-    item.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        burger.classList.remove('active');
+if (burger && navLinks) {
+    burger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        burger.classList.toggle('active');
     });
-});
+
+    navLinksItems.forEach(item => {
+        item.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            burger.classList.remove('active');
+        });
+    });
+}
 
 // ===============================
 // Smooth Scroll
@@ -25,10 +27,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     });
 });
@@ -39,20 +38,22 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 let lastScroll = 0;
 const navbar = document.querySelector('.navbar');
 
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
+if (navbar) {
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
 
-    if (currentScroll <= 0) {
-        navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-    } else if (currentScroll > lastScroll) {
-        navbar.style.transform = 'translateY(-100%)';
-    } else {
-        navbar.style.transform = 'translateY(0)';
-        navbar.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
-    }
+        if (currentScroll <= 0) {
+            navbar.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.1)';
+        } else if (currentScroll > lastScroll) {
+            navbar.style.transform = 'translateY(-100%)';
+        } else {
+            navbar.style.transform = 'translateY(0)';
+            navbar.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)';
+        }
 
-    lastScroll = currentScroll;
-});
+        lastScroll = currentScroll;
+    });
+}
 
 // ===============================
 // Section Animation (IntersectionObserver)
@@ -62,7 +63,7 @@ const observerOptions = {
     rootMargin: '0px 0px -100px 0px'
 };
 
-const observer = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.style.opacity = '1';
@@ -79,53 +80,53 @@ document.querySelectorAll('section').forEach(section => {
 });
 
 // ===============================
-// CONTACT FORM (FORMSPREE – FIXED)
+// CONTACT FORM (WEB3FORMS – VERCEL SAFE)
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
-    const contactForm = document.getElementById("contact-form");
+    const form = document.getElementById("contact-form");
     const status = document.getElementById("form-status");
 
-    if (!contactForm || !status) return;
+    if (!form || !status) return;
 
-    contactForm.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Sending...";
-        }
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending...";
 
         status.textContent = "Sending message...";
         status.style.color = "#4fa3ff";
 
-        const formData = new FormData(contactForm);
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
         try {
-            const response = await fetch(contactForm.action, {
+            const response = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
-                body: formData,
-                headers: { "Accept": "application/json" }
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(data)
             });
 
-            const data = await response.json().catch(() => ({}));
+            const result = await response.json();
 
-            if (response.ok) {
+            if (result.success) {
                 status.textContent = "✅ Message sent successfully!";
                 status.style.color = "green";
-                contactForm.reset();
+                form.reset();
             } else {
-                status.textContent = (data && data.message) ? data.message : "❌ Failed to send message.";
+                status.textContent = "❌ Failed to send message.";
                 status.style.color = "red";
             }
         } catch (error) {
             status.textContent = "❌ Network error. Try again later.";
             status.style.color = "red";
         } finally {
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Send Message";
-            }
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send Message";
         }
     });
 });
@@ -158,7 +159,7 @@ window.addEventListener('scroll', () => {
 // Scroll To Top Button
 // ===============================
 const scrollTopBtn = document.createElement('button');
-scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+scrollTopBtn.innerHTML = '↑';
 scrollTopBtn.className = 'scroll-top';
 scrollTopBtn.style.cssText = `
     position: fixed;
@@ -167,35 +168,64 @@ scrollTopBtn.style.cssText = `
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg,#667eea,#764ba2);
     color: white;
     border: none;
     cursor: pointer;
     display: none;
-    align-items: center;
-    justify-content: center;
     font-size: 1.2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
     z-index: 1000;
 `;
 
 document.body.appendChild(scrollTopBtn);
 
 window.addEventListener('scroll', () => {
-    scrollTopBtn.style.display = window.pageYOffset > 300 ? 'flex' : 'none';
+    scrollTopBtn.style.display = window.pageYOffset > 300 ? 'block' : 'none';
 });
 
 scrollTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-scrollTopBtn.addEventListener('mouseenter', () => {
-    scrollTopBtn.style.transform = 'translateY(-5px)';
-});
+// ===============================
+// Web3Forms Submission Handler
+// ===============================
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formStatus = document.getElementById('form-status');
+        const formData = new FormData(contactForm);
+        
+        try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                formStatus.textContent = '✓ Message sent successfully!';
+                formStatus.style.color = '#10b981';
+                contactForm.reset();
+                setTimeout(() => {
+                    formStatus.textContent = '';
+                }, 3000);
+            } else {
+                formStatus.textContent = '✗ Failed to send message. Please try again.';
+                formStatus.style.color = '#ef4444';
+            }
+        } catch (error) {
+            console.error('Form submission error:', error);
+            formStatus.textContent = '✗ Error sending message. Please try again.';
+            formStatus.style.color = '#ef4444';
+        }
+    });
+}
 
-scrollTopBtn.addEventListener('mouseleave', () => {
-    scrollTopBtn.style.transform = 'translateY(0)';
-});
-
-console.log('Portfolio website loaded successfully!');
+console.log("Portfolio loaded successfully 🚀");

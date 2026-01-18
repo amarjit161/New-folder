@@ -326,7 +326,6 @@
                 <form
   id="contact-form"
   class="contact-form"
-  action="https://api.web3forms.com/submit"
   method="POST"
 >
   <!-- REQUIRED: Web3Forms Access Key -->
@@ -337,7 +336,7 @@
     <input type="hidden" name="from_name" value="IT Engineer Portfolio">
     <input type="hidden" name="site" value="Vercel + GitHub Pages">
     <!-- Optional: set Reply-To to user's email and add honeypot/redirect -->
-    <input type="hidden" name="reply_to" value="{{email}}">
+   
     <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
     <input type="hidden" name="redirect" value="https://web3forms.com/success">
 
@@ -350,7 +349,7 @@
   </div>
 
   <div class="form-group">
-    <input type="text" name="subject" placeholder="Subject">
+    <input type="text" name="user_subject" placeholder="Subject" required>
   </div>
 
   <div class="form-group">
