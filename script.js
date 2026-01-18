@@ -198,18 +198,21 @@ if (contactForm) {
         const formStatus = document.getElementById('form-status');
         const formData = new FormData(contactForm);
         
+        // Convert FormData to JSON object
+        const data = Object.fromEntries(formData);
+        
         try {
-            const response = await fetch('https://api.web3forms.com/submit', {
+            const response = await fetch('/api/contact', {
                 method: 'POST',
-                body: formData,
                 headers: {
-                    'Accept': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
             });
             
-            const data = await response.json();
+            const result = await response.json();
             
-            if (data.success) {
+            if (result.success) {
                 formStatus.textContent = '✓ Message sent successfully!';
                 formStatus.style.color = '#10b981';
                 contactForm.reset();
